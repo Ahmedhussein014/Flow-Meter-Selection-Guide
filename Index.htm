@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow Meter Selection Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+            color: #999;
+            font-weight: 600;
+        }
+
+        .progress-step.active {
+            color: #667eea;
+        }
+
+        .progress-step.completed {
+            color: #28a745;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .progress-step.active::after {
+            background: #667eea;
+        }
+
+        .progress-step.completed::after {
+            background: #28a745;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .form-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 10px;
+            width: auto;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            margin-right: 10px;
+            width: auto;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .results {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .meter-card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .meter-card.recommended {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+
+        .meter-card h4 {
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .meter-rating {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #28a745;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .meter-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .spec-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .spec-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .spec-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .download-btn {
+            background: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .progress-bar {
+                flex-direction: column;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Flow Meter Selection Guide</h1>
+            <p>Comprehensive tool for selecting the optimal flow meter for your application</p>
+        </header>
+
+        <div class="progress-bar">
+            <div class="progress-step active" id="progress-1">1. Initial Assessment</div>
+            <div class="progress-step" id="progress-2">2. Fluid Properties</div>
+            <div class="progress-step" id="progress-3">3. Site & Flow Details</div>
+            <div class="progress-step" id="progress-4">4. Performance Requirements</div>
+            <div class="progress-step" id="progress-5">5. Results</div>
+        </div>
+
+        <div class="content">
+            <!-- Step 1: Initial Assessment -->
+            <div class="step active" id="step-1">
+                <div class="form-section">
+                    <h3>Initial Assessment</h3>
+                    
+                    <div class="warning-box">
+                        <strong>Before proceeding:</strong> Ensure you have allocated funds and schedules for ongoing documentation, maintenance, and calibration of the flow meter.
+                    </div>
+
+                    <div class="form-group">
+                        <label>Do you have a maintenance and calibration plan in place?</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" name="maintenancePlan" value="yes" id="maint-yes" required>
+                                <label for="maint-yes">Yes</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="maintenancePlan" value="no" id="maint-no">
+                                <label for="maint-no">No (Need to establish)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Measurement Type</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" name="measurementType" value="mass" id="type-mass" required>
+                                <label for="type-mass">Mass Flow (Most fundamental)</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="measurementType" value="volume" id="type-volume">
+                                <label for="type-volume">Volume Flow (Industry standard)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Primary Application Purpose</label>
+                        <select name="applicationPurpose" id="appPurpose" required>
+                            <option value="">Select purpose...</option>
+                            <option value="custody">Custody Transfer (Buying/Selling)</option>
+                            <option value="process">Process Control</option>
+                            <option value="monitoring">General Monitoring</option>
+                            <option value="batching">Batching/Blending</option>
+                            <option value="leak">Leak Detection</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Required Uncertainty (Accuracy)</label>
+                        <select name="accuracy" id="accuracy" required>
+                            <option value="">Select accuracy requirement...</option>
+                            <option value="high">High: < 0.5% of rate (Custody transfer, precise billing)</option>
+                            <option value="medium">Medium: 0.5% - 2% of rate (Process control)</option>
+                            <option value="low">Low: > 2% of rate (General monitoring)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>What is more critical for your application?</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" name="accuracyType" value="absolute" id="acc-absolute" required>
+                                <label for="acc-absolute">Absolute Accuracy (True value measurement)</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="accuracyType" value="repeatability" id="acc-repeat">
+                                <label for="acc-repeat">Repeatability (Consistent readings)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Regulatory Requirements (Check all that apply)</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="regulations" value="oiml" id="reg-oiml">
+                                <label for="reg-oiml">OIML</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="regulations" value="mid" id="reg-mid">
+                                <label for="reg-mid">MID (EU)</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="regulations" value="emc" id="reg-emc">
+                                <label for="reg-emc">EMC</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="regulations" value="sil" id="reg-sil">
+                                <label for="reg-sil">SIL (Safety)</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="regulations" value="atex" id="reg-atex">
+                                <label for="reg-atex">ATEX (Explosion-proof)</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="regulations" value="none" id="reg-none">
+                                <label for="reg-none">None Required</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-primary" onclick="nextStep()">Next: Fluid Properties →</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Fluid Properties -->
+            <div class="step" id="step-2">
+                <div class="form-section">
+                    <h3>Fluid Properties</h3>
+
+                    <div class="form-group">
+                        <label>Fluid State</label>
+                        <select name="fluidState" id="fluidState" required>
+                            <option value="">Select fluid state...</option>
+                            <option value="liquid">Liquid</option>
+                            <option value="gas">Gas</option>
+                            <option value="steam">Steam</option>
+                            <option value="twophase">Two-Phase (Gas + Liquid)</option>
+                            <option value="slurry">Slurry (Liquid + Solids)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fluid Name/Composition</label>
+                        <input type="text" name="fluidName" id="fluidName" placeholder="e.g., Water, Natural Gas, Crude Oil" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fluid Cleanliness</label>
+                        <select name="cleanliness" id="cleanliness" required>
+                            <option value="">Select cleanliness level...</option>
+                            <option value="clean">Clean (No particles)</option>
+                            <option value="filtered">Filtered (Small particles)</option>
+                            <option value="dirty">Dirty (Contains debris/solids)</option>
+                            <option value="abrasive">Abrasive (Contains hard particles)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Electrical Conductivity (For liquids)</label>
+                        <select name="conductivity" id="conductivity">
+                            <option value="">Select conductivity...</option>
+                            <option value="high">High (> 50 μS/cm) - Water-based fluids</option>
+                            <option value="low">Low (< 50 μS/cm) - Oils, pure solvents</option>
+                            <option value="unknown">Unknown</option>
+                            <option value="na">N/A (Gas)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Operating Temperature Range</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                            <div>
+                                <input type="number" name="tempMin" id="tempMin" placeholder="Min (°C)" step="0.1">
+                            </div>
+                            <div>
+                                <input type="number" name="tempNormal" id="tempNormal" placeholder="Normal (°C)" step="0.1">
+                            </div>
+                            <div>
+                                <input type="number" name="tempMax" id="tempMax" placeholder="Max (°C)" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Operating Pressure Range</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                            <div>
+                                <input type="number" name="pressMin" id="pressMin" placeholder="Min (bar)" step="0.1">
+                            </div>
+                            <div>
+                                <input type="number" name="pressNormal" id="pressNormal" placeholder="Normal (bar)" step="0.1">
+                            </div>
+                            <div>
+                                <input type="number" name="pressMax" id="pressMax" placeholder="Max (bar)" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Density (kg/m³)</label>
+                        <input type="number" name="density" id="density" placeholder="e.g., 1000 for water" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dynamic Viscosity (cP)</label>
+                        <input type="number" name="viscosity" id="viscosity" placeholder="e.g., 1.0 for water at 20°C" step="0.001">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fluid Characteristics (Check all that apply)</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="fluidChar" value="corrosive" id="char-corr">
+                                <label for="char-corr">Corrosive</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="fluidChar" value="abrasive" id="char-abr">
+                                <label for="char-abr">Abrasive</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="fluidChar" value="flammable" id="char-flam">
+                                <label for="char-flam">Flammable</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="fluidChar" value="toxic" id="char-tox">
+                                <label for="char-tox">Toxic</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="fluidChar" value="lubricating" id="char-lub">
+                                <label for="char-lub">Lubricating</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="fluidChar" value="nonnewtonian" id="char-nn">
+                                <label for="char-nn">Non-Newtonian</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-secondary" onclick="prevStep()">← Back</button>
+                    <button class="btn-primary" onclick="nextStep()">Next: Site Details →</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Site & Flow Details -->
+            <div class="step" id="step-3">
+                <div class="form-section">
+                    <h3>Site & Flow Details</h3>
+
+                    <div class="form-group">
+                        <label>Pipe Inside Diameter (mm)</label>
+                        <input type="number" name="pipeID" id="pipeID" placeholder="e.g., 100" step="0.1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pipe Material</label>
+                        <select name="pipeMaterial" id="pipeMaterial">
+                            <option value="">Select material...</option>
+                            <option value="steel">Carbon Steel</option>
+                            <option value="ss">Stainless Steel</option>
+                            <option value="pvc">PVC</option>
+                            <option value="copper">Copper</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pipe Orientation</label>
+                        <select name="pipeOrientation" id="pipeOrientation" required>
+                            <option value="">Select orientation...</option>
+                            <option value="horizontal">Horizontal</option>
+                            <option value="vertical-up">Vertical (Flow upward)</option>
+                            <option value="vertical-down">Vertical (Flow downward)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Available Upstream Straight Pipe Length (× Diameter)</label>
+                        <input type="number" name="upstreamLength" id="upstreamLength" placeholder="e.g., 10D, 20D, 40D" step="1" required>
+                        <small style="color: #666; display: block; margin-top: 5px;">Distance from nearest upstream fitting (bend, valve, etc.) to meter installation point</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Available Downstream Straight Pipe Length (× Diameter)</label>
+                        <input type="number" name="downstreamLength" id="downstreamLength" placeholder="e.g., 5D, 10D" step="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nearest Upstream Fitting Type</label>
+                        <select name="upstreamFitting" id="upstreamFitting">
+                            <option value="">Select fitting...</option>
+                            <option value="none">None (Long straight run)</option>
+                            <option value="bend90">90° Bend/Elbow</option>
+                            <option value="bend45">45° Bend</option>
+                            <option value="tee">T-piece</option>
+                            <option value="reducer">Reducer/Expander</option>
+                            <option value="valve">Valve</option>
+                            <option value="multiple">Multiple fittings</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Flow Rate Requirements</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                            <div>
+                                <input type="number" name="flowMin" id="flowMin" placeholder="Minimum" step="0.01" required>
+                            </div>
+                            <div>
+                                <input type="number" name="flowNormal" id="flowNormal" placeholder="Normal" step="0.01" required>
+                            </div>
+                            <div>
+                                <input type="number" name="flowMax" id="flowMax" placeholder="Maximum" step="0.01" required>
+                            </div>
+                        </div>
+                        <select name="flowUnit" id="flowUnit" style="margin-top: 10px;">
+                            <option value="m3h">m³/h (Volume)</option>
+                            <option value="lpm">L/min (Volume)</option>
+                            <option value="kgh">kg/h (Mass)</option>
+                            <option value="sm3h">Sm³/h (Standard volume - Gas)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Required Turndown Ratio</label>
+                        <input type="number" name="turndown" id="turndown" placeholder="e.g., 10:1 means 10" step="1">
+                        <small style="color: #666; display: block; margin-top: 5px;">Maximum flow / Minimum flow (e.g., 10:1, 20:1, 100:1)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Maximum Acceptable Pressure Drop (bar)</label>
+                        <input type="number" name="maxPressureDrop" id="maxPressureDrop" placeholder="e.g., 0.5" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Installation Constraints (Check all that apply)</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="constraints" value="limited-space" id="const-space">
+                                <label for="const-space">Limited Space</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="constraints" value="weight-limit" id="const-weight">
+                                <label for="const-weight">Weight Restrictions</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="constraints" value="no-shutdown" id="const-shutdown">
+                                <label for="const-shutdown">Cannot Shutdown Process</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="constraints" value="vibration" id="const-vib">
+                                <label for="const-vib">High Vibration Area</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="constraints" value="temperature" id="const-temp">
+                                <label for="const-temp">Extreme Temperature</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-secondary" onclick="prevStep()">← Back</button>
+                    <button class="btn-primary" onclick="nextStep()">Next: Requirements →</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Performance Requirements -->
+            <div class="step" id="step-4">
+                <div class="form-section">
+                    <h3>Electrical & Performance Requirements</h3>
+
+                    <div class="form-group">
+                        <label>Available Power Supply</label>
+                        <select name="powerSupply" id="powerSupply">
+                            <option value="">Select power supply...</option>
+                            <option value="230vac">230 VAC</option>
+                            <option value="110vac">110 VAC</option>
+                            <option value="24vdc">24 VDC</option>
+                            <option value="battery">Battery Powered</option>
+                            <option value="none">None (Passive/Mechanical)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Required Output Signal</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="outputSignal" value="4-20ma" id="out-420">
+                                <label for="out-420">4-20 mA</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="outputSignal" value="pulse" id="out-pulse">
+                                <label for="out-pulse">Pulse/Frequency</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="outputSignal" value="hart" id="out-hart">
+                                <label for="out-hart">HART</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="outputSignal" value="profibus" id="out-profi">
+                                <label for="out-profi">Profibus</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="outputSignal" value="modbus" id="out-mod">
+                                <label for="out-mod">Modbus</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="outputSignal" value="ethernet" id="out-eth">
+                                <label for="out-eth">Ethernet/IP</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Response Time Requirement</label>
+                        <select name="responseTime" id="responseTime">
+                            <option value="">Select response time...</option>
+                            <option value="fast">Fast (< 1 second) - Critical control</option>
+                            <option value="medium">Medium (1-5 seconds) - Standard control</option>
+                            <option value="slow">Slow (> 5 seconds) - Monitoring only</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Maintenance Schedule Preference</label>
+                        <select name="maintenance" id="maintenance">
+                            <option value="">Select maintenance preference...</option>
+                            <option value="minimal">Minimal (Low maintenance technology preferred)</option>
+                            <option value="regular">Regular (Scheduled maintenance acceptable)</option>
+                            <option value="intensive">Intensive (Can handle frequent maintenance)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Budget Consideration</label>
+                        <select name="budget" id="budget">
+                            <option value="">Select budget level...</option>
+                            <option value="low">Low Initial Cost (May accept higher operating costs)</option>
+                            <option value="medium">Medium (Balanced initial and operating costs)</option>
+                            <option value="high">High (Prioritize performance over initial cost)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Additional Features Desired (Check all that apply)</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="features" value="density" id="feat-dens">
+                                <label for="feat-dens">Density Measurement</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="features" value="temperature" id="feat-temp">
+                                <label for="feat-temp">Temperature Measurement</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="features" value="bidirectional" id="feat-bidir">
+                                <label for="feat-bidir">Bidirectional Flow</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="features" value="totalizer" id="feat-total">
+                                <label for="feat-total">Built-in Totalizer</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="features" value="display" id="feat-disp">
+                                <label for="feat-disp">Local Display</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="features" value="datalogging" id="feat-log">
+                                <label for="feat-log">Data Logging</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Additional Notes or Special Requirements</label>
+                        <textarea name="notes" id="notes" placeholder="Any other specific requirements or constraints..."></textarea>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-secondary" onclick="prevStep()">← Back</button>
+                    <button class="btn-primary" onclick="generateResults()">Generate Recommendations →</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Results -->
+            <div class="step" id="step-5">
+                <h2 style="margin-bottom: 20px;">Flow Meter Selection Results</h2>
+                <div id="resultsContainer"></div>
+                
+                <div class="btn-group" style="margin-top: 30px;">
+                    <button class="btn-secondary" onclick="prevStep()">← Modify Inputs</button>
+                    <button class="download-btn" onclick="downloadReport()">📄 Download Selection Report</button>
+                    <button class="btn-primary" onclick="resetForm()">🔄 Start New Selection</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+        let formData = {};
+
+        function nextStep() {
+            if (validateCurrentStep()) {
+                saveCurrentStepData();
+                currentStep++;
+                updateDisplay();
+            }
+        }
+
+        function prevStep() {
+            currentStep--;
+            updateDisplay();
+        }
+
+        function validateCurrentStep() {
+            const currentStepElement = document.getElementById(`step-${currentStep}`);
+            const requiredInputs = currentStepElement.querySelectorAll('[required]');
+            
+            for (let input of requiredInputs) {
+                if (!input.value && input.type !== 'radio' && input.type !== 'checkbox') {
+                    alert('Please fill in all required fields');
+                    input.focus();
+                    return false;
+                }
+                
+                if (input.type === 'radio') {
+                    const radioGroup = document.querySelectorAll(`input[name="${input.name}"]`);
+                    const isChecked = Array.from(radioGroup).some(radio => radio.checked);
+                    if (!isChecked) {
+                        alert(`Please select an option for: ${input.name}`);
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        function saveCurrentStepData() {
+            const currentStepElement = document.getElementById(`step-${currentStep}`);
+            const inputs = currentStepElement.querySelectorAll('input, select, textarea');
+            
+            inputs.forEach(input => {
+                if (input.type === 'checkbox') {
+                    if (!formData[input.name]) formData[input.name] = [];
+                    if (input.checked) {
+                        formData[input.name].push(input.value);
+                    }
+                } else if (input.type === 'radio') {
+                    if (input.checked) {
+                        formData[input.name] = input.value;
+                    }
+                } else {
+                    formData[input.name] = input.value;
+                }
+            });
+        }
+
+        function updateDisplay() {
+            // Hide all steps
+            for (let i = 1; i <= totalSteps; i++) {
+                document.getElementById(`step-${i}`).classList.remove('active');
+                document.getElementById(`progress-${i}`).classList.remove('active', 'completed');
+            }
+            
+            // Show current step
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            document.getElementById(`progress-${currentStep}`).classList.add('active');
+            
+            // Mark completed steps
+            for (let i = 1; i < currentStep; i++) {
+                document.getElementById(`progress-${i}`).classList.add('completed');
+            }
+            
+            // Scroll to top
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function generateResults() {
+            if (!validateCurrentStep()) return;
+            saveCurrentStepData();
+            
+            const recommendations = analyzeAndRecommend(formData);
+            displayResults(recommendations);
+            
+            currentStep = 5;
+            updateDisplay();
+        }
+
+        function analyzeAndRecommend(data) {
+            const meters = [];
+            
+            // Scoring system for each meter type
+            const meterTypes = [
+                {
+                    name: 'Coriolis Mass Flowmeter',
+                    score: 0,
+                    accuracy: '0.05% - 0.3%',
+                    turndown: '20:1 to 100:1',
+                    pressureLoss: 'Medium to Low',
+                    cost: 'High',
+                    maintenance: 'Low'
+                },
+                {
+                    name: 'Electromagnetic (Magmeter)',
+                    score: 0,
+                    accuracy: '0.5%',
+                    turndown: '100:1',
+                    pressureLoss: 'None (Clear bore)',
+                    cost: 'Medium',
+                    maintenance: 'Low'
+                },
+                {
+                    name: 'Ultrasonic (Transit-Time)',
+                    score: 0,
+                    accuracy: '0.5% - 2%',
+                    turndown: '20:1 - 30:1',
+                    pressureLoss: 'None',
+                    cost: 'Medium to High',
+                    maintenance: 'Low'
+                },
+                {
+                    name: 'Turbine Meter',
+                    score: 0,
+                    accuracy: '0.15% - 0.5%',
+                    turndown: '10:1 - 30:1',
+                    pressureLoss: 'Medium',
+                    cost: 'Low to Medium',
+                    maintenance: 'Medium'
+                },
+                {
+                    name: 'Positive Displacement',
+                    score: 0,
+                    accuracy: '0.1% - 0.3%',
+                    turndown: '10:1 - 80:1',
+                    pressureLoss: 'High',
+                    cost: 'High',
+                    maintenance: 'Medium to High'
+                },
+                {
+                    name: 'Vortex Shedding',
+                    score: 0,
+                    accuracy: '0.5% - 2%',
+                    turndown: '20:1',
+                    pressureLoss: 'High to Medium',
+                    cost: 'Low to Medium',
+                    maintenance: 'Low'
+                },
+                {
+                    name: 'Orifice Plate',
+                    score: 0,
+                    accuracy: '0.5% - 2%',
+                    turndown: '5:1',
+                    pressureLoss: 'High',
+                    cost: 'Low',
+                    maintenance: 'Low'
+                },
+                {
+                    name: 'Venturi Meter',
+                    score: 0,
+                    accuracy: '0.5%',
+                    turndown: '5:1',
+                    pressureLoss: 'Medium',
+                    cost: 'Medium to High',
+                    maintenance: 'Low'
+                },
+                {
+                    name: 'Thermal Mass Flowmeter',
+                    score: 0,
+                    accuracy: '1% - 2%',
+                    turndown: '15:1 - 50:1',
+                    pressureLoss: 'Low',
+                    cost: 'Medium',
+                    maintenance: 'Low to Medium'
+                }
+            ];
+
+            // Analyze based on measurement type
+            if (data.measurementType === 'mass') {
+                meterTypes[0].score += 20; // Coriolis
+                meterTypes[8].score += 15; // Thermal (for gas)
+            }
+
+            // Analyze based on fluid state
+            if (data.fluidState === 'liquid') {
+                meterTypes[0].score += 15; // Coriolis
+                meterTypes[1].score += 15; // Electromagnetic
+                meterTypes[2].score += 10; // Ultrasonic
+                meterTypes[3].score += 10; // Turbine
+                meterTypes[4].score += 10; // PD
+                meterTypes[5].score += 10; // Vortex
+            } else if (data.fluidState === 'gas') {
+                meterTypes[0].score += 10; // Coriolis
+                meterTypes[2].score += 15; // Ultrasonic
+                meterTypes[3].score += 10; // Turbine
+                meterTypes[5].score += 10; // Vortex
+                meterTypes[6].score += 10; // Orifice
+                meterTypes[8].score += 20; // Thermal
+            } else if (data.fluidState === 'slurry') {
+                meterTypes[1].score += 20; // Electromagnetic
+                meterTypes[7].score += 10; // Venturi
+            } else if (data.fluidState === 'twophase') {
+                meterTypes[7].score += 10; // Venturi
+                // Most meters penalized for two-phase
+                meterTypes[3].score -= 20; // Turbine
+                meterTypes[4].score -= 20; // PD
+            }
+
+            // Conductivity (for electromagnetic meters)
+            if (data.conductivity === 'high' && data.fluidState === 'liquid') {
+                meterTypes[1].score += 25; // Electromagnetic is ideal
+            } else if (data.conductivity === 'low') {
+                meterTypes[1].score -= 30; // Electromagnetic won't work
+            }
+
+            // Cleanliness
+            if (data.cleanliness === 'clean') {
+                meterTypes[3].score += 10; // Turbine
+                meterTypes[4].score += 10; // PD
+            } else if (data.cleanliness === 'dirty' || data.cleanliness === 'abrasive') {
+                meterTypes[1].score += 15; // Electromagnetic
+                meterTypes[0].score += 5; // Coriolis
+                meterTypes[3].score -= 20; // Turbine
+                meterTypes[4].score -= 20; // PD
+            }
+
+            // Accuracy requirements
+            if (data.accuracy === 'high') {
+                meterTypes[0].score += 20; // Coriolis
+                meterTypes[4].score += 15; // PD
+                meterTypes[3].score += 10; // Turbine
+            }
+
+            // Installation sensitivity
+            const upstreamLength = parseInt(data.upstreamLength) || 0;
+            if (upstreamLength < 10) {
+                // Limited straight run - prefer meters insensitive to installation
+                meterTypes[0].score += 20; // Coriolis
+                meterTypes[1].score += 15; // Electromagnetic
+                meterTypes[4].score += 15; // PD
+                meterTypes[2].score -= 15; // Ultrasonic
+                meterTypes[3].score -= 15; // Turbine
+                meterTypes[6].score -= 20; // Orifice
+            }
+
+            // Pressure drop sensitivity
+            if (data.maxPressureDrop && parseFloat(data.maxPressureDrop) < 0.5) {
+                meterTypes[1].score += 20; // Electromagnetic (zero loss)
+                meterTypes[2].score += 20; // Ultrasonic (zero loss)
+                meterTypes[0].score += 10; // Coriolis (low loss)
+                meterTypes[6].score -= 20; // Orifice (high loss)
+                meterTypes[4].score -= 15; // PD (high loss)
+            }
+
+            // Maintenance preference
+            if (data.maintenance === 'minimal') {
+                meterTypes[0].score += 10; // Coriolis
+                meterTypes[1].score += 10; // Electromagnetic
+                meterTypes[2].score += 10; // Ultrasonic
+                meterTypes[5].score += 10; // Vortex
+                meterTypes[3].score -= 10; // Turbine (moving parts)
+                meterTypes[4].score -= 10; // PD (moving parts)
+            }
+
+            // Budget
+            if (data.budget === 'low') {
+                meterTypes[6].score += 15; // Orifice
+                meterTypes[5].score += 10; // Vortex
+                meterTypes[3].score += 5; // Turbine
+                meterTypes[0].score -= 15; // Coriolis
+            } else if (data.budget === 'high') {
+                meterTypes[0].score += 10; // Coriolis
+            }
+
+            // Sort by score
+            meterTypes.sort((a, b) => b.score - a.score);
+
+            // Take top 3-4 recommendations
+            return meterTypes.slice(0, 4).map((meter, index) => {
+                meter.rank = index + 1;
+                meter.recommended = index === 0;
+                return meter;
+            });
+        }
+
+        function displayResults(recommendations) {
+            const container = document.getElementById('resultsContainer');
+            let html = '';
+
+            // Summary box
+            html += `
+                <div class="info-box">
+                    <h3 style="margin-bottom: 10px;">Selection Summary</h3>
+                    <p><strong>Application:</strong> ${formData.applicationPurpose || 'Not specified'}</p>
+                    <p><strong>Fluid:</strong> ${formData.fluidName || 'Not specified'} (${formData.fluidState || 'Unknown'})</p>
+                    <p><strong>Measurement Type:</strong> ${formData.measurementType === 'mass' ? 'Mass Flow' : 'Volume Flow'}</p>
+                    <p><strong>Accuracy Requirement:</strong> ${formData.accuracy || 'Not specified'}</p>
+                    <p><strong>Flow Range:</strong> ${formData.flowMin || '?'} - ${formData.flowMax || '?'} ${formData.flowUnit || ''}</p>
+                </div>
+            `;
+
+            // Top recommendation
+            if (recommendations.length > 0) {
+                const top = recommendations[0];
+                html += `
+                    <div class="meter-card recommended">
+                        <span class="meter-rating">⭐ TOP RECOMMENDATION</span>
+                        <h4>${top.name}</h4>
+                        <p style="margin-bottom: 20px; color: #666;">This meter type is best suited for your application based on the specified requirements.</p>
+                        
+                        <div class="meter-specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Accuracy</div>
+                                <div class="spec-value">${top.accuracy}</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Turndown Ratio</div>
+                                <div class="spec-value">${top.turndown}</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Pressure Loss</div>
+                                <div class="spec-value">${top.pressureLoss}</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Initial Cost</div>
+                                <div class="spec-value">${top.cost}</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Maintenance</div>
+                                <div class="spec-value">${top.maintenance}</div>
+                            </div>
+                        </div>
+                        
+                        ${getRecommendationDetails(top.name, formData)}
+                    </div>
+                `;
+            }
+
+            // Alternative options
+            html += '<h3 style="margin: 30px 0 20px 0;">Alternative Options</h3>';
+            
+            for (let i = 1; i < recommendations.length; i++) {
+                const meter = recommendations[i];
+                html += `
+                    <div class="meter-card">
+                        <h4>${meter.rank}. ${meter.name}</h4>
+                        
+                        <div class="meter-specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Accuracy</div>
+                                <div class="spec-value">${meter.accuracy}</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Turndown Ratio</div>
+                                <div class="spec-value">${meter.turndown}</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Pressure Loss</div>
+                                <div class="spec-value">${meter.pressureLoss}</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Initial Cost</div>
+                                <div class="spec-value">${meter.cost}</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Maintenance</div>
+                                <div class="spec-value">${meter.maintenance}</div>
+                            </div>
+                        </div>
+                        
+                        ${getRecommendationDetails(meter.name, formData)}
+                    </div>
+                `;
+            }
+
+            // Important considerations
+            html += getImportantConsiderations(formData);
+
+            container.innerHTML = html;
+        }
+
+        function getRecommendationDetails(meterName, data) {
+            const details = {
+                'Coriolis Mass Flowmeter': {
+                    advantages: [
+                        'Directly measures mass flow with highest accuracy',
+                        'Insensitive to flow profile and installation',
+                        'Also measures density, temperature, and viscosity',
+                        'No moving parts - minimal maintenance',
+                        'Wide turndown ratio (20:1 to 100:1)'
+                    ],
+                    disadvantages: [
+                        'Highest initial cost among flowmeters',
+                        'Can be large and heavy for large pipe sizes',
+                        'Sensitive to external vibration (older models)',
+                        'Performance degrades in two-phase flow'
+                    ],
+                    applications: 'Ideal for custody transfer, batching, blending, high-viscosity fluids, cryogenic liquids, and applications requiring maximum accuracy.',
+                    notes: []
+                },
+                'Electromagnetic (Magmeter)': {
+                    advantages: [
+                        'Zero pressure loss (clear bore design)',
+                        'Excellent for slurries and dirty liquids',
+                        'No moving parts - very reliable',
+                        'Insensitive to density and viscosity changes',
+                        'Wide rangeability (100:1)',
+                        'Bidirectional flow measurement'
+                    ],
+                    disadvantages: [
+                        'Only works with conductive fluids (>50 μS/cm)',
+                        'Cannot measure oils, pure solvents, or gases',
+                        'Requires pipe to be completely full',
+                        'May be affected by coating buildup on electrodes'
+                    ],
+                    applications: 'Water, wastewater, slurries, pulp and paper, food processing, chemical processing.',
+                    notes: []
+                },
+                'Ultrasonic (Transit-Time)': {
+                    advantages: [
+                        'Non-invasive option available (clamp-on)',
+                        'No pressure loss or flow obstruction',
+                        'No moving parts',
+                        'Bidirectional measurement',
+                        'Multi-path designs offer high accuracy'
+                    ],
+                    disadvantages: [
+                        'Sensitive to flow profile (single-path)',
+                        'Requires clean, single-phase fluid',
+                        'Gas bubbles or solids cause measurement errors',
+                        'Pipe must be full',
+                        'Requires adequate straight pipe lengths'
+                    ],
+                    applications: 'Large pipes, custody transfer (gas/oil), water distribution, clean liquids.',
+                    notes: []
+                },
+                'Turbine Meter': {
+                    advantages: [
+                        'High accuracy for clean fluids',
+                        'Good repeatability',
+                        'Wide flow range',
+                        'Proven technology',
+                        'Relatively compact'
+                    ],
+                    disadvantages: [
+                        'Moving parts (bearings) require maintenance',
+                        'Requires clean, lubricating fluid',
+                        'Highly sensitive to swirl and installation',
+                        'Wears out over time',
+                        'Not suitable for slurries or dirty fluids'
+                    ],
+                    applications: 'Clean liquids (fuel, hydrocarbons), clean gases, precision measurement.',
+                    notes: []
+                },
+                'Positive Displacement': {
+                    advantages: [
+                        'Very high accuracy',
+                        'Excellent repeatability',
+                        'Wide turndown (especially for gas)',
+                        'Insensitive to flow profile',
+                        'Good for viscous fluids'
+                    ],
+                    disadvantages: [
+                        'Moving parts require maintenance',
+                        'High pressure drop',
+                        'Requires clean fluid (filtration needed)',
+                        'Can be blocked by debris',
+                        'Higher initial cost'
+                    ],
+                    applications: 'Custody transfer (gasoline, diesel), batching, high-viscosity fluids, clean gases.',
+                    notes: []
+                },
+                'Vortex Shedding': {
+                    advantages: [
+                        'No moving parts',
+                        'Linear frequency output',
+                        'Suitable for liquids, gases, and steam',
+                        'Relatively low cost',
+                        'Low maintenance'
+                    ],
+                    disadvantages: [
+                        'Poor performance at low Reynolds numbers',
+                        'Sensitive to pipe vibration',
+                        'Not suitable for high-viscosity fluids',
+                        'Requires minimum flow velocity',
+                        'May be affected by flow pulsation'
+                    ],
+                    applications: 'Steam, compressed air, general utility flows, water.',
+                    notes: []
+                },
+                'Orifice Plate': {
+                    advantages: [
+                        'Lowest initial cost',
+                        'Well-documented in standards',
+                        'No moving parts',
+                        'Predictable performance (if built to spec)',
+                        'Can calculate without calibration'
+                    ],
+                    disadvantages: [
+                        'High permanent pressure loss (energy waste)',
+                        'Limited turndown ratio (5:1)',
+                        'Highly sensitive to installation',
+                        'Wears over time (sharp edges)',
+                        'Requires significant straight pipe'
+                    ],
+                    applications: 'General purpose for clean liquids and gases where cost is priority.',
+                    notes: []
+                },
+                'Venturi Meter': {
+                    advantages: [
+                        'Low pressure loss',
+                        'Suitable for dirty fluids and slurries',
+                        'Resistant to fouling',
+                        'Defined by ISO standards',
+                        'Rugged construction'
+                    ],
+                    disadvantages: [
+                        'Large and heavy',
+                        'Higher cost than orifice',
+                        'Limited turndown',
+                        'Requires straight pipe',
+                        'Installation sensitive'
+                    ],
+                    applications: 'Slurries, dirty liquids, wet gas, large pipes.',
+                    notes: []
+                },
+                'Thermal Mass Flowmeter': {
+                    advantages: [
+                        'Directly measures mass flow of gas',
+                        'Very sensitive at low flow rates',
+                        'No moving parts',
+                        'Wide turndown ratio',
+                        'Can handle high temperatures'
+                    ],
+                    disadvantages: [
+                        'Gas-dependent calibration',
+                        'Requires clean, dry gas',
+                        'Moisture or deposits affect accuracy',
+                        'Not suitable for liquids (except capillary type)',
+                        'Slower response time'
+                    ],
+                    applications: 'Low gas flows, semiconductor manufacturing, leak detection, air monitoring.',
+                    notes: []
+                }
+            };
+
+            const info = details[meterName];
+            if (!info) return '';
+
+            // Add specific notes based on application data
+            if (data.fluidState === 'slurry' && meterName !== 'Electromagnetic (Magmeter)') {
+                info.notes.push('⚠️ Consider electromagnetic meter as primary choice for slurry applications.');
+            }
+            if (data.cleanliness !== 'clean' && (meterName === 'Turbine Meter' || meterName === 'Positive Displacement')) {
+                info.notes.push('⚠️ This meter requires clean fluid. Ensure adequate filtration is installed upstream.');
+            }
+            if (data.conductivity === 'low' && meterName === 'Electromagnetic (Magmeter)') {
+                info.notes.push('❌ WARNING: Electromagnetic meters will NOT work with your low-conductivity fluid.');
+            }
+            if (parseInt(data.upstreamLength) < 10 && (meterName === 'Orifice Plate' || meterName === 'Turbine Meter')) {
+                info.notes.push('⚠️ Limited upstream straight pipe may cause accuracy issues. Consider flow conditioner or select different meter.');
+            }
+
+            let html = `
+                <div style="margin-top: 20px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">✓ Advantages</h4>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        ${info.advantages.map(adv => `<li>${adv}</li>`).join('')}
+                    </ul>
+                    
+                    <h4 style="color: #dc3545; margin: 15px 0 10px 0;">✗ Disadvantages</h4>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        ${info.disadvantages.map(dis => `<li>${dis}</li>`).join('')}
+                    </ul>
+                    
+                    <h4 style="color: #333; margin: 15px 0 10px 0;">📋 Typical Applications</h4>
+                    <p style="margin-left: 10px;">${info.applications}</p>
+            `;
+
+            if (info.notes.length > 0) {
+                html += `
+                    <div class="warning-box" style="margin-top: 15px;">
+                        <h4 style="margin-bottom: 10px;">Important Notes for Your Application</h4>
+                        ${info.notes.map(note => `<p style="margin: 5px 0;">${note}</p>`).join('')}
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function getImportantConsiderations(data) {
+            let html = '<div class="warning-box" style="margin-top: 30px;"><h3 style="margin-bottom: 15px;">⚠️ Important Installation & Operating Considerations</h3><ul style="margin-left: 20px; line-height: 2;">';
+
+            const considerations = [];
+
+            // Installation length warnings
+            const upstream = parseInt(data.upstreamLength) || 0;
+            if (upstream < 10) {
+                considerations.push('Your upstream straight pipe length is limited. Consider installing a flow conditioner or selecting a meter insensitive to installation effects (Coriolis, Electromagnetic, or PD).');
+            } else if (upstream < 20) {
+                considerations.push('Ensure your upstream piping configuration matches the manufacturer\'s installation requirements. Some meters may require 20-40D for full accuracy.');
+            }
+
+            // Pressure drop
+            if (data.maxPressureDrop && parseFloat(data.maxPressureDrop) < 0.5) {
+                considerations.push('Your pressure drop budget is tight. Avoid orifice plates and consider clear-bore designs (Electromagnetic, Ultrasonic) or low-loss meters.');
+            }
+
+            // Maintenance
+            if (data.maintenancePlan === 'no') {
+                considerations.push('⚠️ You indicated no maintenance plan is in place. Prioritize meters with minimal maintenance requirements and establish a calibration schedule before installation.');
+            }
+
+            // Conductivity warning
+            if (data.conductivity === 'low' || data.conductivity === 'unknown') {
+                considerations.push('If fluid conductivity is low (<50 μS/cm), electromagnetic meters will not work. Verify conductivity before purchasing.');
+            }
+
+            // Two-phase warning
+            if (data.fluidState === 'twophase') {
+                considerations.push('Two-phase flow is extremely challenging. Most conventional meters will give erroneous readings. Consider specialized multiphase flowmeters or separation-based measurement.');
+            }
+
+            // Custody transfer
+            if (data.applicationPurpose === 'custody') {
+                considerations.push('For custody transfer, ensure the meter is approved by relevant authorities (OIML, weights & measures) and maintain rigorous calibration records.');
+            }
+
+            // Regulations
+            if (data.regulations && data.regulations.includes('sil')) {
+                considerations.push('SIL-rated applications require additional safety documentation, redundant measurement, and certified equipment. Consult with safety engineers.');
+            }
+
+            // Default consideration
+            if (considerations.length === 0) {
+                considerations.push('Verify all specifications with the meter manufacturer before purchase.');
+                considerations.push('Plan for regular calibration and maintenance according to manufacturer recommendations.');
+            }
+
+            html += considerations.map(c => `<li>${c}</li>`).join('');
+            html += '</ul></div>';
+
+            return html;
+        }
+
+        function downloadReport() {
+            const reportContent = generateReportText();
+            const blob = new Blob([reportContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Flowmeter_Selection_Report_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function generateReportText() {
+            let report = '═══════════════════════════════════════════════════════\n';
+            report += '        FLOW METER SELECTION REPORT\n';
+            report += '═══════════════════════════════════════════════════════\n\n';
+            report += `Generated: ${new Date().toLocaleString()}\n\n`;
+            
+            report += '─────────────────────────────────────────────────────\n';
+            report += 'APPLICATION SPECIFICATIONS\n';
+            report += '─────────────────────────────────────────────────────\n';
+            
+            for (const [key, value] of Object.entries(formData)) {
+                if (Array.isArray(value)) {
+                    report += `${key}: ${value.join(', ')}\n`;
+                } else {
+                    report += `${key}: ${value}\n`;
+                }
+            }
+            
+            report += '\n─────────────────────────────────────────────────────\n';
+            report += 'RECOMMENDATIONS\n';
+            report += '─────────────────────────────────────────────────────\n\n';
+            report += 'See detailed recommendations in the web application.\n\n';
+            report += '═══════════════════════════════════════════════════════\n';
+            report += 'Based on "Flow Measurement Handbook" by Roger C. Baker\n';
+            report += '═══════════════════════════════════════════════════════\n';
+            
+            return report;
+        }
+
+        function resetForm() {
+            formData = {};
+            currentStep = 1;
+            document.querySelectorAll('input, select, textarea').forEach(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    input.checked = false;
+                } else {
+                    input.value = '';
+                }
+            });
+            updateDisplay();
+        }
+
+        // Initialize
+        updateDisplay();
+    </script>
+</body>
+</html>
